@@ -4,7 +4,7 @@ Course Name: - Software Development Funcamental-2
 Course Code: -15B11CI211
 Course Faculty: - Dr. Alka Singhal
 Made By: -
-        Vansh Sachdev
+        Vansh Sachdeva
         19103194
         B6
 
