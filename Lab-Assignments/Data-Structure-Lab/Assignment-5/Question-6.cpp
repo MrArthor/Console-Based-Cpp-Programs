@@ -1,89 +1,89 @@
 #include <iostream>
 
 using namespace std;
-class node
+class Node
 {
 public:
-    int data;
-    node *next;
+    int Data;
+    Node *Next;
 };
 
 class linked_list
 {
 public:
-    node *head;
-    int count;
+    Node *Head;
+    int Count;
 
     linked_list()
     {
 
-        head = NULL;
-        count = 0;
+        Head = NULL;
+        Count = 0;
     }
 
-    node *createNode(int n) //CREATE NODE
+    Node *createNode(int n) //CREATE NODE
     {
-        node *tmp = new node;
-        tmp->data = n;
-        tmp->next = NULL;
-        count++;
+        Node *tmp = new Node;
+        tmp->Data = n;
+        tmp->Next = NULL;
+        Count++;
         return tmp;
     }
 
     void insert_beg(int n) //INSERT AT THE BEGINNING
     {
-        node *temp = createNode(n);
+        Node *TempNode = createNode(n);
 
-        temp->next = head;
-        head = temp;
+        TempNode->Next = Head;
+        Head = TempNode;
     }
 
     void insert_end(int n) //INSERT AT THE END
     {
-        node *temp = createNode(n);
-        if (head == NULL)
+        Node *TempNode = createNode(n);
+        if (Head == NULL)
         {
-            head = temp;
+            Head = TempNode;
         }
         else
         {
-            node *curr = head;
-            while (curr->next != NULL)
+            Node *curr = Head;
+            while (curr->Next != NULL)
             {
-                curr = curr->next;
+                curr = curr->Next;
             }
-            curr->next = temp;
-            count++;
+            curr->Next = TempNode;
+            Count++;
         }
     }
 
-    node *swap(node *a1, node *b1) //BUBBLE SORT
+    Node *swap(Node *a1, Node *b1) //BUBBLE SORT
     {
-        node *tmp = b1->next;
-        b1->next = a1;
-        a1->next = tmp;
+        Node *tmp = b1->Next;
+        b1->Next = a1;
+        a1->Next = tmp;
         return b1;
     }
 
-    void BubleSort(node **head, int c)
+    void BubleSort(Node **Head, int c)
     {
-        node **h;
+        Node **h;
         for (int i = 0; i <= c; i++)
         {
-            h = head;
+            h = Head;
 
             for (int j = 0; j < c - i - 1; j++)
             {
 
-                node *a = *h;
-                node *b = a->next;
+                Node *a = *h;
+                Node *b = a->Next;
 
-                if (a->data > b->data)
+                if (a->Data > b->Data)
                 {
                     *h = swap(a, b);
                 }
 
-                h = &(*h)->next;
+                h = &(*h)->Next;
             }
         }
     }
@@ -91,72 +91,142 @@ public:
     void display() //DISPLAY NODE
     {
         cout << "\nList: ";
-        node *temp = head;
-        while (temp != NULL)
+        Node *TempNode = Head;
+        while (TempNode != NULL)
         {
-            cout << temp->data << " ";
-            temp = temp->next;
+            cout << TempNode->Data << " ";
+            TempNode = TempNode->Next;
         }
     }
 
     void BubleSorting()
     {
-        BubleSort(&head, count);
+        BubleSort(&Head, Count);
     }
-    void selectionSort(node *head)
+    void selectionSort(Node *Head)
     {
-        node *temp = head;
+        Node *TempNode = Head;
 
-        while (temp)
+        while (TempNode)
         {
-            node *min = temp;
-            node *r = temp->next;
+            Node *min = TempNode;
+            Node *r = TempNode->Next;
 
             while (r)
             {
-                if (min->data > r->data)
+                if (min->Data > r->Data)
                     min = r;
 
-                r = r->next;
+                r = r->Next;
             }
 
-            int x = temp->data;
-            temp->data = min->data;
-            min->data = x;
-            temp = temp->next;
+            int x = TempNode->Data;
+            TempNode->Data = min->Data;
+            min->Data = x;
+            TempNode = TempNode->Next;
         }
     }
     void SelectionSorting()
     {
-        selectionSort(head);
+        selectionSort(Head);
     }
     void del_beg() //DELETE FROM BEGINNING
     {
-        if (head == NULL)
+        if (Head == NULL)
             cout << "\nList is empty.";
         else
         {
-            node *temp = head;
-            head = head->next;
-            delete temp;
+            Node *TempNode = Head;
+            Head = Head->Next;
+            delete TempNode;
         }
     }
-    void InsertionSort();
-    void del_end() //DELETE FROM THE END
+    void FrontBackSplit(Node *source,
+                        Node **frontRef, Node **backRef)
     {
-        if (head == NULL)
-            cout << "\nList is empty.";
-        else if (head->next == NULL)
-            delete head;
+        Node *Fast;
+        Node *Slow;
+        Slow = source;
+        Fast = source->Next;
+
+        while (Fast != NULL)
+        {
+            Fast = Fast->Next;
+            if (Fast != NULL)
+            {
+                Slow = Slow->Next;
+                Fast = Fast->Next;
+            }
+        }
+
+        *frontRef = source;
+        *backRef = Slow->Next;
+        Slow->Next = NULL;
+    }
+    Node *SortedMerge(Node *a, Node *b)
+    {
+        Node *result = NULL;
+
+        if (a == NULL)
+            return (b);
+        else if (b == NULL)
+            return (a);
+
+        if (a->Data <= b->Data)
+        {
+            result = a;
+            result->Next = SortedMerge(a->Next, b);
+        }
         else
         {
-            node *temp = head;
-            while (temp->next->next != NULL)
-                temp = temp->next;
-
-            delete temp->next;
-            temp->next = NULL;
+            result = b;
+            result->Next = SortedMerge(a, b->Next);
         }
+        return (result);
+    }
+
+    void MergeSort(Node **headRef)
+    {
+        Node *Head = *headRef;
+        Node *a;
+        Node *b;
+
+        if ((Head == NULL) || (Head->Next == NULL))
+        {
+            return;
+        }
+
+        FrontBackSplit(Head, &a, &b);
+
+        MergeSort(&a);
+        MergeSort(&b);
+
+        *headRef = SortedMerge(a, b);
+    }
+
+    void MergeSorting()
+    {
+        MergeSort(&Head);
+    }
+    void del_end() //DELETE FROM THE END
+    {
+        if (Head == NULL)
+            cout << "\nList is empty.";
+        else if (Head->Next == NULL)
+            delete Head;
+        else
+        {
+            Node *TempNode = Head;
+            while (TempNode->Next->Next != NULL)
+                TempNode = TempNode->Next;
+
+            delete TempNode->Next;
+            TempNode->Next = NULL;
+        }
+    }
+
+    void QuickSorting()
+    {
     }
 };
 
@@ -164,25 +234,39 @@ int main()
 {
     int n;
     cin >> n;
-    linked_list ll;
+    linked_list LinkedList;
+
     for (int i = 0; i < n; i++)
     {
-        int temp;
-        cin >> temp;
-        ll.insert_end(temp);
+        int TempNode;
+        cin >> TempNode;
+        LinkedList.insert_end(TempNode);
     }
+
+    LinkedList.display();
     int option;
     cin >> option;
     switch (option)
     {
     case 1:
-        ll.SelectionSorting();
+        LinkedList.SelectionSorting();
+        cout << "Linked List After Sorting ";
+        LinkedList.display();
         break;
     case 2:
-        ll.BubleSorting();
+        LinkedList.BubleSorting();
+        cout << "Linked List After Sorting ";
+        LinkedList.display();
         break;
     case 3:
-        ll.InsertionSort();
+        LinkedList.MergeSorting();
+        cout << "Linked List After Sorting ";
+        LinkedList.display();
+        break;
+    case 4:
+        LinkedList.QuickSorting();
+        cout << "Linked List After Sorting ";
+        LinkedList.display();
         break;
     default:
         cout << "Wrong Option ";
