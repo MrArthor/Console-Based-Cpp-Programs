@@ -224,7 +224,32 @@ public:
             TempNode->Next = NULL;
         }
     }
+    linked_list *Pattern()
+    {
+        int i = 0;
+        MergeSort(&Head);
+        linked_list *Link = new linked_list;
+        Node *TempNode = Head, *TempNode1 = Head->Next, *Pat = TempNode1;
+        while (TempNode || TempNode1)
+        {
+            if (i % 2 == 0)
+            {
+                i++;
+                Pat->Next = TempNode;
+                Link->insert_end(TempNode->Data);
+                TempNode->Next = TempNode->Next->Next;
+            }
+            else
+            {
+                i++;
+                Pat->Next = TempNode1;
+                Link->insert_end(TempNode1->Data);
 
+                TempNode1->Next = TempNode1->Next->Next;
+            }
+        }
+        return Link;
+    }
     void QuickSorting()
     {
     }
@@ -244,33 +269,7 @@ int main()
     }
 
     LinkedList.display();
-    int option;
-    cin >> option;
-    switch (option)
-    {
-    case 1:
-        LinkedList.SelectionSorting();
-        cout << "Linked List After Sorting ";
-        LinkedList.display();
-        break;
-    case 2:
-        LinkedList.BubleSorting();
-        cout << "Linked List After Sorting ";
-        LinkedList.display();
-        break;
-    case 3:
-        LinkedList.MergeSorting();
-        cout << "Linked List After Sorting ";
-        LinkedList.display();
-        break;
-    case 4:
-        LinkedList.QuickSorting();
-        cout << "Linked List After Sorting ";
-        LinkedList.display();
-        break;
-    default:
-        cout << "Wrong Option ";
-        break;
-    }
+    linked_list *List = LinkedList.Pattern();
+    List->display();
     return 0;
 }
