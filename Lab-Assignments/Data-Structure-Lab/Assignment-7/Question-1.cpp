@@ -122,6 +122,5 @@ int main()
     }
     cout << "topper :-" << stu << " scoring " << max_marks << "/500 " << endl;
 
-
     return 0;
 }
